@@ -40,8 +40,11 @@ export function fillPlaceholders(str, profile, overrides = {}) {
 
 /** Keep only the fields listed in target.output (if any). */
 export function projectOutput(target, obj) {
-  if (!target.output || !Array.isArray(obj) && typeof obj !== "object" || obj == null) return obj;
+  if (!target.output || obj == null) return obj;
+  const isObject = (val) => val !== null && typeof val === "object";
   const pick = (o) =>
-    target.output.reduce((acc, f) => (f in o ? ((acc[f] = o[f]), acc) : acc), {});
+    isObject(o)
+      ? target.output.reduce((acc, f) => (f in o ? ((acc[f] = o[f]), acc) : acc), {})
+      : o;
   return Array.isArray(obj) ? obj.map(pick) : pick(obj);
 }
