@@ -1,0 +1,11 @@
+{
+  "mcpServers": {
+    "tinyfish": {
+      "type": "http",
+      "url": "https://mcp.tinyfish.ai",
+      "headers": {
+        "X-API-Key": "${TINYFISH_API_KEY}"
+      }
+    }
+  }
+}
