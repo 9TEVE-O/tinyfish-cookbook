@@ -1,0 +1,56 @@
+{
+  "$schema": "./schema.md",
+  "profile": "lab",
+  "org": {
+    "name": "LAB Music Management",
+    "domain": "labmusicmanagement.com",
+    "description": "Music management company. This web-extractor pulls live web data relevant to artist roster, releases, touring, streaming, press and bookings."
+  },
+
+  "defaults": {
+    "searchLimit": 5,
+    "fetchFormat": "markdown",
+    "region": "us"
+  },
+
+  "//": "Each target is one adjustable extraction recipe. Add/edit freely — code is generic and reads from here. 'engine' is one of: search | fetch | agent | browser.",
+  "targets": [
+    {
+      "id": "artist-press",
+      "label": "Artist press & mentions",
+      "engine": "search",
+      "query": "{{artist}} music news OR interview OR review",
+      "limit": 5,
+      "output": ["title", "url", "snippet", "publishedAt"]
+    },
+    {
+      "id": "streaming-stats",
+      "label": "Streaming / playlist placements",
+      "engine": "agent",
+      "url": "https://open.spotify.com/search/{{artist}}",
+      "goal": "Find this artist's profile, monthly listeners, top tracks and any editorial playlist placements. Return JSON with fields: artist, monthlyListeners, topTracks[], playlists[].",
+      "output": ["artist", "monthlyListeners", "topTracks", "playlists"]
+    },
+    {
+      "id": "tour-dates",
+      "label": "Tour & event listings",
+      "engine": "agent",
+      "url": "https://www.bandsintown.com/?came_from=257&searched_query={{artist}}",
+      "goal": "List all upcoming events for this artist. Return JSON array with fields: date, venue, city, country, ticketUrl.",
+      "output": ["date", "venue", "city", "country", "ticketUrl"]
+    },
+    {
+      "id": "page-extract",
+      "label": "Clean a specific URL to markdown/JSON",
+      "engine": "fetch",
+      "url": "{{url}}",
+      "output": ["url", "title", "content"]
+    }
+  ],
+
+  "//variables": "Default values for {{placeholders}} above. Override per-run via CLI flags or the API request body.",
+  "variables": {
+    "artist": "",
+    "url": ""
+  }
+}
