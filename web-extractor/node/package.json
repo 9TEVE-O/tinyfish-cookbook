@@ -1,0 +1,21 @@
+{
+  "name": "lab-web-extractor",
+  "version": "0.1.0",
+  "private": true,
+  "description": "LAB Music Management web-extractor — config-driven Node server over TinyFish Search/Fetch/Agent/Browser.",
+  "type": "module",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --watch server.js"
+  },
+  "dependencies": {
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "node-fetch": "^3.3.2",
+    "playwright": "^1.44.0"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}
