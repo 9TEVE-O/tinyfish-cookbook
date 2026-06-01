@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { TinyFish } from "@tiny-fish/sdk";
 
 const FALLBACK_WEBSITES = [
   { name: "Wyzant", url: "https://www.wyzant.com/search" },
@@ -11,25 +12,18 @@ const FALLBACK_WEBSITES = [
 ];
 
 export async function POST(req: NextRequest) {
+  const apiKey = process.env.TINYFISH_API_KEY;
+  if (!apiKey) {
+    return NextResponse.json({ websites: FALLBACK_WEBSITES });
+  }
+
   try {
     const { exam, location } = await req.json();
 
     const query = `${exam} tutors ${location} tutoring services exam prep`;
 
-    const response = await fetch(
-      `https://api.search.tinyfish.ai?query=${encodeURIComponent(query)}`,
-      {
-        headers: {
-          "X-API-Key": process.env.TINYFISH_API_KEY!,
-        },
-      }
-    );
-
-    if (!response.ok) {
-      return NextResponse.json({ websites: FALLBACK_WEBSITES });
-    }
-
-    const data = await response.json();
+    const client = new TinyFish({ apiKey });
+    const data = await client.search.query({ query });
 
     const websites = (data.results || []).map(
       (r: { title: string; url: string }) => ({
